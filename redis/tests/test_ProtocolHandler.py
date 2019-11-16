@@ -1,6 +1,6 @@
-from ProtocolHandler import ProtocolHandler
+from .. import ProtocolHandler 
 
-handler = ProtocolHandler()
+handler = ProtocolHandler.ProtocolHandler()
 
 def test_string_deserialization():
 	serialized = "+OK\r\n"
@@ -8,7 +8,6 @@ def test_string_deserialization():
 	expected = "OK"
 
 	assert(actual == expected)
-	print("test string deserialization passed.")
 
 def test_string_serialization():
 	input = "OK"
@@ -16,14 +15,12 @@ def test_string_serialization():
 	expected = "+OK\r\n"
 
 	assert(actual == expected)
-	print("test string serialization passed.")
 
 def test_integer_deserialization():
 	serialized = ":111\r\n"
 	actual = handler.deserialize_integer(serialized)
 	expected = 111
 	assert(actual == expected)
-	print("test integer deserialization passed.")
 
 def test_integer_serialization():
 	input = 111
@@ -31,11 +28,3 @@ def test_integer_serialization():
 	expected = ":111\r\n"
 
 	assert(actual == expected)
-	print("test integer serialization passed.")
-
-test_string_deserialization()
-test_string_serialization()
-test_integer_deserialization()
-test_integer_serialization()
-
-
