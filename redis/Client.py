@@ -11,3 +11,6 @@ class Client(object):
         data = self.socket.recv(1024)
         print(data)
 
+if __name__ == "__main__":
+    c = Client()
+    c.execute()
