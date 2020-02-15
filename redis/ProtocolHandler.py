@@ -4,6 +4,9 @@ SEPARATOR_LENGTH = len(LINE_SEPARATOR)    # Line Separator Length
 
 class ProtocolHandler:
 
+    def __init__(self):
+        pass
+
     def deserialize_string(self, s):
         return s[1 : -SEPARATOR_LENGTH]
 
@@ -185,4 +188,35 @@ class ProtocolHandler:
         # %{number of bytes}-{number of keys}\r\n{0 or more of above}
 
         return ('%' + str(len(s)) + '-' + str(n_elements) + LINE_SEPARATOR + s)
-        
+
+
+    def deserialize(self, s):
+        if s[0] == '+':
+            return self.deserialize_string(s)
+        elif s[0] == ':':
+            return self.deserialize_integer(s)
+        elif s[0] == '$':
+            return self.deserialize_binary(s)
+        elif s[0] == '*':
+            return self.deserialize_array(s)
+        elif s[0] == '%':
+            return self.deserialize_dictionary(s)
+        else:
+            raise Exception('Wrong type indicator while deserializing')
+
+
+    def serialize(self, anytype):
+        if type(anytype) is int:
+            return self.serialize_integer(anytype)
+        elif type(anytype) is str:
+            return self.serialize_string(anytype)
+        elif type(anytype) is bytearray:
+            return self.serialize_binary(anytype)
+        elif type(anytype) is list:
+            return self.serialize_array(anytype)
+        elif type(anytype) is dict:
+            return self.serialize_dictionary(anytype)
+        else:
+            raise Exception('Wrong type to be serialized. Only the following types can be serialized: int, str, bytearray, list, dict')
+
+
