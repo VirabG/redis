@@ -11,41 +11,34 @@ class Client(object):
         self.prot_handler = ProtocolHandler()
 
     def command_to_message(self, args):
-    #    ###TODO: parse a command which is given in args, send it to server and receive response
-    #        command = ''
-    #        assert args[0] in ('GET', 'SET', 'DELETE', 'FLUSH'), 'Wrong Command!'
-    #        n_args = len(args)
-    #        command += args[0]
-    #        if command == 'GET' or command == 'DELETE' or command == 'SET':
-    #            assert n_args >= 2, 'Wrong Command: no key given for SET/GET/DELETE'
-    #            assert (type(args[1] is int) or type(args[1]) is str), 'Wrong Command: key type in SET/GET/DELETE must be either "int" or "str"'
-    #            command += self.prot_handler.serialize(args[1])
-    #
-    #            if command[0:3] == 'SET':
-    #                assert n_args == 3, 'Wrong Command: SET must have exactly two arguments, the key and the value'
-    #                command += self.prot_handler.serialize(args[2])
-    #            else:
-    #                assert n_args == 2, 'Wrong Command: GET/DELETE must have exactly one argument, the key'
-    #        else: # the command is FLUSH
-    #            assert n_args == 1, 'Wrong Command: FLUSH must not have any arguments'
-    #        # self.socket.sendall(b'Hello, world')
-    #        command_bytes = bytes(command, 'ascii')
-    #
-    #        # at the beginning we add the number of bytes to be transferred
-    #        # n_bytes = len(command_bytes)
-    #        # command_bytes = bytes(str(n_bytes), 'ascii') + command_bytes
-    #
-    #        self.socket.send(command_bytes)
-    #
-    #        # all hell breaks loose
-    #        #while True:
-    #        #    data = self.socket.recv(128)
-    #        #    if not data:
-    #        #        break
-    #        #data = self.socket.recv(128)
-    #        #print(data)
-    #
-        msg = str(args)
+        """
+        The function transforms the command to execute into a transferable string form.
+        :param args: The first argument is in ('GET', 'SET', 'DELETE', 'FLUSH')
+        :return: a string containing the arguments - serialized and concatenated
+        """
+        msg = ''
+        assert args[0] in ('GET', 'SET', 'DELETE', 'FLUSH'), 'Wrong Command! The command must be in (SET, GET, DELETE, FLUSH)'
+        n_args = len(args)
+        msg += args[0]
+        if msg == 'SET':
+            assert n_args == 3, 'Wrong Command: SET must have exactly two arguments, the key and the value'
+            assert ( (type(args[1]) is int) or (type(args[1]) is str) ), 'Wrong Command: key type in SET must be either "int" or "str"'
+            msg += self.prot_handler.serialize(args[1])
+            msg += self.prot_handler.serialize(args[2])
+
+        elif msg == 'GET':
+            assert n_args == 2, 'Wrong Command: GET must have exactly one argument, the key'
+            assert ( (type(args[1]) is int) or (type(args[1]) is str) ), 'Wrong Command: key type in GET must be either "int" or "str"'
+            msg += self.prot_handler.serialize(args[1])
+
+        elif msg == 'DELETE':
+            assert n_args == 2, 'Wrong Command: DELETE must have exactly one argument, the key'
+            assert ( (type(args[1]) is int) or (type(args[1]) is str) ), 'Wrong Command: key type in DELETE must be either "int" or "str"'
+            msg += self.prot_handler.serialize(args[1])
+
+        else:  # command == FLUSH
+            assert n_args == 1, 'Wrong Command: FLUSH must not have any arguments'
+
         return msg
 
     async def send_request_and_get_response(self, message, loop):
@@ -86,4 +79,5 @@ class Client(object):
 
 if __name__ == "__main__":
     c = Client()
-    c.set(4, "aaa")
+    resp1 = c.get(5)
+    print(resp1)
