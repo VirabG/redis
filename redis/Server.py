@@ -64,10 +64,21 @@ class Server(object):
         print("Close the client socket")
         writer.close()
 
+    async def save_to_disc(self):
+        # TODO: save database to disc every 5 seconds
+        while True:
+            await asyncio.sleep(5)
+            from time import time
+            f = open('time', 'w')
+            f.write(str(time()))
+            f.close()
+
     def run(self):
         loop = asyncio.get_event_loop()
         coro = asyncio.start_server(self.handle_request, self.host, self.port, loop=loop)
         server = loop.run_until_complete(coro)
+
+        asyncio.async(self.save_to_disc())
 
         # Serve requests until Ctrl+C is pressed
         print('Serving on {}'.format(server.sockets[0].getsockname()))

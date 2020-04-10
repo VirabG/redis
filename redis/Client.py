@@ -9,6 +9,8 @@ class Client(object):
         self.port = port
         self.prot_handler = ProtocolHandler()
 
+        self.loop = asyncio.get_event_loop()
+
     def command_to_message(self, args):
         """
             The function transforms the command to execute into a transferable string form.
@@ -61,9 +63,7 @@ class Client(object):
     def execute(self, *args):
         msg = self.command_to_message(args)
 
-        loop = asyncio.get_event_loop()
-        response = loop.run_until_complete(self.send_request_and_get_response(msg, loop))
-        loop.close()
+        response = self.loop.run_until_complete(self.send_request_and_get_response(msg, self.loop))
 
         return response
 
