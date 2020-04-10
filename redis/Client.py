@@ -1,5 +1,5 @@
 import asyncio
-from ProtocolHandler import ProtocolHandler
+from .ProtocolHandler import ProtocolHandler
 import time
 
 
