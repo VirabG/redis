@@ -2,6 +2,7 @@ import subprocess
 import time
 from ..Client import Client
 
+
 def test_server_with_single_client():
     p = subprocess.Popen(['python', 'redis/Server.py'])
     time.sleep(0.1)

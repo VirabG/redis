@@ -1,6 +1,5 @@
 import asyncio
 from .ProtocolHandler import ProtocolHandler
-import time
 
 
 class Client(object):
@@ -12,9 +11,9 @@ class Client(object):
 
     def command_to_message(self, args):
         """
-        The function transforms the command to execute into a transferable string form.
-        :param args: The first argument is in ('GET', 'SET', 'DELETE', 'FLUSH')
-        :return: a string containing the arguments - serialized and concatenated
+            The function transforms the command to execute into a transferable string form.
+            :param args: The first argument is in ('GET', 'SET', 'DELETE', 'FLUSH')
+            :return: a string containing the arguments - serialized and concatenated
         """
         msg = ''
         assert args[0] in ('GET', 'SET', 'DELETE', 'FLUSH'), 'Wrong Command! The command must be in (SET, GET, DELETE, FLUSH)'
@@ -22,18 +21,21 @@ class Client(object):
         msg += args[0]
         if msg == 'SET':
             assert n_args == 3, 'Wrong Command: SET must have exactly two arguments, the key and the value'
-            assert ( (type(args[1]) is int) or (type(args[1]) is str) ), 'Wrong Command: key type in SET must be either "int" or "str"'
+            assert ((type(args[1]) is int) or (type(args[1]) is str)), \
+                'Wrong Command: key type in SET must be either "int" or "str"'
             msg += self.prot_handler.serialize(args[1])
             msg += self.prot_handler.serialize(args[2])
 
         elif msg == 'GET':
             assert n_args == 2, 'Wrong Command: GET must have exactly one argument, the key'
-            assert ( (type(args[1]) is int) or (type(args[1]) is str) ), 'Wrong Command: key type in GET must be either "int" or "str"'
+            assert ((type(args[1]) is int) or (type(args[1]) is str)), \
+                'Wrong Command: key type in GET must be either "int" or "str"'
             msg += self.prot_handler.serialize(args[1])
 
         elif msg == 'DELETE':
             assert n_args == 2, 'Wrong Command: DELETE must have exactly one argument, the key'
-            assert ( (type(args[1]) is int) or (type(args[1]) is str) ), 'Wrong Command: key type in DELETE must be either "int" or "str"'
+            assert ((type(args[1]) is int) or (type(args[1]) is str)), \
+                'Wrong Command: key type in DELETE must be either "int" or "str"'
             msg += self.prot_handler.serialize(args[1])
 
         else:  # command == FLUSH
@@ -58,7 +60,7 @@ class Client(object):
 
     def execute(self, *args):
         msg = self.command_to_message(args)
-        
+
         loop = asyncio.get_event_loop()
         response = loop.run_until_complete(self.send_request_and_get_response(msg, loop))
         loop.close()
@@ -76,6 +78,7 @@ class Client(object):
 
     def flush(self):
         return self.execute('FLUSH')
+
 
 if __name__ == "__main__":
     c = Client()

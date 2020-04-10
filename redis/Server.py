@@ -2,7 +2,7 @@ import asyncio
 
 from ProtocolHandler import ProtocolHandler
 from ProtocolHandler import LINE_SEPARATOR, SEPARATOR_LENGTH
-import time
+
 
 class Server(object):
     def __init__(self, host='127.0.0.1', port=8888):
@@ -14,14 +14,15 @@ class Server(object):
 
     def get_response(self, request):
 
-#                ##TODO: process SET and GET, FLUSH and DELETE
+        # TODO: process SET and GET, FLUSH and DELETE
 
         if request[:3] == 'GET':
             key = self.prot_handler.deserialize(request[3:])
             try:
                 response = self.prot_handler.serialize(self.database[key])
-            except:
-                response = self.prot_handler.serialize('No such key') # What if the value of the key is 'No such key'
+            except Exception:
+                # What if the value of the key is 'No such key'
+                response = self.prot_handler.serialize('No such key')
 
         elif request[:3] == 'SET':
             key_end = request.find(LINE_SEPARATOR)
@@ -35,7 +36,7 @@ class Server(object):
             try:
                 del self.database[key]
                 response = self.prot_handler.serialize('Deleted successfully')
-            except:
+            except Exception:
                 response = self.prot_handler.serialize('No such key')
 
         elif request[:5] == 'FLUSH':
@@ -47,9 +48,8 @@ class Server(object):
 
         return response
 
-
     async def handle_request(self, reader, writer):
-        ###TODO: process data here and send response back to client
+        # TODO: process data here and send response back to client
         data = await reader.read(100)
         message = data.decode()    # should we change this 'message' to request?
         addr = writer.get_extra_info('peername')
@@ -63,7 +63,7 @@ class Server(object):
 
         print("Close the client socket")
         writer.close()
-    
+
     def run(self):
         loop = asyncio.get_event_loop()
         coro = asyncio.start_server(self.handle_request, self.host, self.port, loop=loop)
@@ -80,6 +80,7 @@ class Server(object):
         server.close()
         loop.run_until_complete(server.wait_closed())
         loop.close()
+
 
 if __name__ == "__main__":
     s = Server()
