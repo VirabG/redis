@@ -1,8 +1,10 @@
 import asyncio
+import pickle
 
 from ProtocolHandler import ProtocolHandler
 from ProtocolHandler import LINE_SEPARATOR, SEPARATOR_LENGTH
 import time
+import threading
 
 class Server(object):
     def __init__(self, host='127.0.0.1', port=8888):
@@ -10,6 +12,11 @@ class Server(object):
         self.port = port
 
         self.database = dict()
+        try:
+            with open('database.dictionary', 'rb') as f:
+                self.database = pickle.load(f)
+        except:
+            print('Creating empty database')
         self.prot_handler = ProtocolHandler()
 
     def get_response(self, request):
@@ -65,6 +72,7 @@ class Server(object):
         writer.close()
     
     def run(self):
+        self.save_state_every_10_secs()
         loop = asyncio.get_event_loop()
         coro = asyncio.start_server(self.handle_request, self.host, self.port, loop=loop)
         server = loop.run_until_complete(coro)
@@ -81,6 +89,14 @@ class Server(object):
         loop.run_until_complete(server.wait_closed())
         loop.close()
 
+    def save_state_every_10_secs(self):
+        threading.Timer(10, self.save_state_every_10_secs).start()
+        with open('database.dictionary', 'wb') as f:
+            pickle.dump(self.database, f)
+        print('Server State Saved')
+
 if __name__ == "__main__":
     s = Server()
+    print('printing database')
+    print(s.database)
     s.run()

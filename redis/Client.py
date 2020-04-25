@@ -79,5 +79,5 @@ class Client(object):
 
 if __name__ == "__main__":
     c = Client()
-    resp1 = c.get(5)
+    resp1 = c.set('key8', 40320)
     print(resp1)
