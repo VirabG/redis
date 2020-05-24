@@ -7,7 +7,7 @@ def test_echo_server_with_single_client():
     time.sleep(1.1)
     client = Client()
     response = client.set(4, "aaa")
-    assert response == "('SET', 4, 'aaa')"
+    assert response == "+Set successfully\r\n"
     p.terminate()
 
 """
