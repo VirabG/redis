@@ -82,5 +82,10 @@ class Client(object):
 
 if __name__ == "__main__":
     c = Client()
+<<<<<<< HEAD
     resp1 = c.get(5)
     print(resp1)
+=======
+    resp1 = c.set('key8', 40320)
+    print(resp1)
+>>>>>>> communication
