@@ -1,5 +1,5 @@
 import asyncio
-from .ProtocolHandler import ProtocolHandler
+from ProtocolHandler import ProtocolHandler
 
 
 class Client(object):
@@ -82,10 +82,23 @@ class Client(object):
 
 if __name__ == "__main__":
     c = Client()
-<<<<<<< HEAD
-    resp1 = c.get(5)
-    print(resp1)
-=======
+
     resp1 = c.set('key8', 40320)
     print(resp1)
->>>>>>> communication
+
+    resp1 = c.set('key9', 362880)
+    print(resp1)
+
+    resp1 = c.set(5, 120)
+    print(resp1)
+
+    resp1 = c.set(5, 25)
+    print(resp1)
+
+    resp1 = c.delete(4)
+    print(resp1)
+
+
+
+
+

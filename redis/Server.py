@@ -3,12 +3,8 @@ import pickle
 
 from ProtocolHandler import ProtocolHandler
 from ProtocolHandler import LINE_SEPARATOR, SEPARATOR_LENGTH
-<<<<<<< HEAD
-
-=======
 import time
 import threading
->>>>>>> communication
 
 class Server(object):
     def __init__(self, host='127.0.0.1', port=8888):
@@ -85,7 +81,7 @@ class Server(object):
             f.close()
 
     def run(self):
-        self.save_state_every_10_secs()
+        self.save_state_every_XXX_secs()
         loop = asyncio.get_event_loop()
         coro = asyncio.start_server(self.handle_request, self.host, self.port, loop=loop)
         server = loop.run_until_complete(coro)
@@ -104,14 +100,12 @@ class Server(object):
         loop.run_until_complete(server.wait_closed())
         loop.close()
 
-<<<<<<< HEAD
-=======
-    def save_state_every_10_secs(self):
-        threading.Timer(10, self.save_state_every_10_secs).start()
+    def save_state_every_XXX_secs(self):
+        XXX = 1  # Constant which shows after how many secs the Server State is saved
+        threading.Timer(XXX, self.save_state_every_XXX_secs).start()
         with open('database.dictionary', 'wb') as f:
             pickle.dump(self.database, f)
         print('Server State Saved')
->>>>>>> communication
 
 if __name__ == "__main__":
     s = Server()
