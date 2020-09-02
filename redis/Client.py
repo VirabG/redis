@@ -95,7 +95,10 @@ if __name__ == "__main__":
     resp1 = c.set(5, 25)
     print(resp1)
 
-    resp1 = c.delete(4)
+    resp1 = c.get(5)
+    print(resp1)
+
+    resp1 = c.flush()
     print(resp1)
 
 
